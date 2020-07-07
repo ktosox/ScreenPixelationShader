@@ -1,0 +1,95 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://pallet.png" type="Texture" id=1]
+[ext_resource path="res://3.png" type="Texture" id=2]
+[ext_resource path="res://Golden_runes2.png" type="Texture" id=3]
+
+[sub_resource type="Shader" id=3]
+code = "shader_type canvas_item;	
+render_mode blend_mix;	
+
+uniform sampler2D pallet;
+	
+uniform bool on = true;
+uniform float strenght = 10.0;
+
+
+
+void fragment() {	
+	float dx = SCREEN_PIXEL_SIZE.x *strenght;
+	float dy = SCREEN_PIXEL_SIZE.y *strenght;
+	vec2 new_UV = vec2(dx* floor(SCREEN_UV.x/dx),dy* floor(SCREEN_UV.y/dy) );
+	new_UV *= vec2((strenght+720.0)/720.0,(strenght+720.0)/720.0);
+	COLOR = textureLod(SCREEN_TEXTURE,new_UV,1.0);
+	if(on)	
+	{
+		
+		vec4 bestColor = vec4(0, 0, 0, 1.0);
+		vec3 bestDiff = vec3(100, 100, 100);
+
+
+
+		for (float i = 0.0; i < 22.0; ++i) {
+			for (float j = 0.0; j<2.0; j++){
+				
+
+				vec4 palCol = texture(pallet, vec2(i/22.0,j));
+	 			vec3 diff = ( COLOR.rgb-palCol.rgb )/2.0 ;
+				diff = abs(diff);
+				if (length(diff) < length(bestDiff)) {
+	   			     bestDiff = diff;
+	    		    bestColor = palCol;
+				}
+			}
+			}
+		COLOR = bestColor;
+		if(length(COLOR.rgb)<0.39 ){COLOR.rgb = mix(vec3(0.5), COLOR.rgb, 10.9);}
+		if(COLOR.r>0.5 || COLOR.b >0.5 || COLOR.g >0.5){COLOR.rgb = mix(vec3(dot(COLOR.rgb, vec3(0.9)) * 0.33333), COLOR.rgb, 1.3);}
+
+	}
+	}	"
+custom_defines = ""
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 3 )
+shader_param/on = false
+shader_param/strenght = 9.0
+shader_param/pallet = ExtResource( 1 )
+
+[sub_resource type="Animation" id=4]
+length = 4.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rect_size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1.5, 2.3, 3.6, 4 ),
+"transitions": PoolRealArray( 1, 0.5, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 720, 720 ), Vector2( 720, 0 ), Vector2( 720, 0 ), Vector2( 720, 720 ), Vector2( 720, 720 ) ]
+}
+
+[node name="StaticImage" type="Node2D"]
+
+[node name="3" type="Sprite" parent="."]
+position = Vector2( 43.297, 519.431 )
+texture = ExtResource( 2 )
+
+[node name="Golden_runes2" type="Sprite" parent="."]
+position = Vector2( 638.582, 312.903 )
+texture = ExtResource( 3 )
+
+[node name="Shader" type="ColorRect" parent="."]
+material = SubResource( 2 )
+margin_right = 720.0
+margin_bottom = 305.432
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Shader"]
+autoplay = "New Anim"
+"anims/New Anim" = SubResource( 4 )

@@ -1,0 +1,108 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://31-1x.png" type="Texture" id=1]
+[ext_resource path="res://effect4.png" type="Texture" id=2]
+[ext_resource path="res://effect5.png" type="Texture" id=3]
+[ext_resource path="res://1.png" type="Texture" id=4]
+
+[sub_resource type="ParticlesMaterial" id=3]
+lifetime_randomness = 1.0
+flag_disable_z = true
+spread = 18.1
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 172.41
+angular_velocity = 20.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+angle = 331.0
+angle_random = 0.38
+scale = 5.0
+scale_random = 0.6
+color = Color( 0, 1, 0.937255, 1 )
+hue_variation = 0.73
+hue_variation_random = 0.88
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;	
+render_mode blend_mix;	
+
+uniform sampler2D pallet;
+	
+uniform bool on = true;
+uniform float strenght = 10.0;
+
+
+
+void fragment() {	
+	float dx = SCREEN_PIXEL_SIZE.x *strenght;
+	float dy = SCREEN_PIXEL_SIZE.y *strenght;
+	vec2 new_UV = vec2(dx* floor(SCREEN_UV.x/dx),dy* floor(SCREEN_UV.y/dy) );
+	new_UV *= vec2((strenght+720.0)/720.0,(strenght+720.0)/720.0);
+	COLOR = textureLod(SCREEN_TEXTURE,new_UV,1.0);
+	if(on)	
+	{
+		
+		vec4 bestColor = vec4(0, 0, 0, 1.0);
+		vec3 bestDiff = vec3(100, 100, 100);
+
+		//if(length(COLOR.rgb)<0.39 ){COLOR.rgb = mix(vec3(0.5), COLOR.rgb, 1.9);}
+		//if(COLOR.r>0.5 || COLOR.b >0.5 || COLOR.g >0.5){COLOR.rgb = mix(vec3(dot(COLOR.rgb, vec3(0.9)) * 0.33333), COLOR.rgb, 1.3);}
+
+
+		for (float i = 0.0; i < 31.0; ++i) {
+			for (float j = 0.0; j<1.0; j++){
+				
+
+				vec4 palCol = texture(pallet, vec2(i/31.0,j));
+	 			vec3 diff = ( COLOR.rgb-palCol.rgb )/2.0 ;
+				diff = abs(diff);
+				if (length(diff) < length(bestDiff)) {
+	   			     bestDiff = diff;
+	    		    bestColor = palCol;
+				}
+			}
+			}
+		COLOR = bestColor;
+
+	}
+	}	"
+custom_defines = ""
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/on = true
+shader_param/strenght = 5.0
+shader_param/pallet = ExtResource( 1 )
+
+[node name="MovingParticles" type="Node2D"]
+
+[node name="1" type="Sprite" parent="."]
+position = Vector2( 156.727, 1352.68 )
+texture = ExtResource( 4 )
+
+[node name="Particles2D" type="Particles2D" parent="."]
+self_modulate = Color( 1, 1, 1, 0.454902 )
+position = Vector2( 524.692, -60.2625 )
+rotation = 1.5708
+amount = 90
+lifetime = 9.0
+process_material = SubResource( 3 )
+texture = ExtResource( 2 )
+
+[node name="Particles2D2" type="Particles2D" parent="."]
+self_modulate = Color( 1, 1, 1, 0.345098 )
+position = Vector2( 153.027, -77.2676 )
+rotation = 1.5708
+amount = 93
+lifetime = 9.0
+process_material = SubResource( 3 )
+texture = ExtResource( 3 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource( 2 )
+margin_right = 720.0
+margin_bottom = 720.0
+__meta__ = {
+"_edit_use_anchors_": false,
+"_editor_description_": ""
+}
