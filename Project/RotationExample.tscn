@@ -46,7 +46,7 @@ angle_random = 0.64
 scale = 3.0
 scale_random = 0.08
 scale_curve = SubResource( 2 )
-hue_variation = 0.84012
+hue_variation = 0.841559
 
 [sub_resource type="Animation" id=7]
 resource_name = "New Anim"
@@ -151,7 +151,7 @@ shader_param/pallet = ExtResource( 2 )
 
 [node name="Golden_runes2" type="Sprite" parent="."]
 position = Vector2( 640.195, 129.051 )
-rotation = -5.30362
+rotation = -5.97512
 scale = Vector2( 0.4, 1 )
 texture = ExtResource( 4 )
 
@@ -174,13 +174,13 @@ autoplay = "New Anim"
 
 [node name="icon" type="Sprite" parent="."]
 position = Vector2( 289.471, 571.327 )
-rotation = 5.61034
+rotation = 1.41372
 scale = Vector2( 2, 2 )
 texture = ExtResource( 3 )
 
 [node name="icon2" type="Sprite" parent="icon"]
 position = Vector2( 20, 71.352 )
-rotation = 0.672844
+rotation = 4.86946
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 3 )
 

@@ -122,21 +122,22 @@ custom_defines = ""
 [sub_resource type="ShaderMaterial" id=4]
 shader = SubResource( 3 )
 shader_param/on = true
-shader_param/strenght = 2.0
+shader_param/strenght = 5.0
 shader_param/pallet = ExtResource( 7 )
 
 [node name="SimpleAnimation" type="Node2D"]
 
 [node name="AnimatedSprite3" type="AnimatedSprite" parent="."]
-position = Vector2( 382.476, 178.881 )
+position = Vector2( 354.245, 202.814 )
+scale = Vector2( 0.8, 0.8 )
 frames = SubResource( 6 )
-frame = 3
+frame = 2
 playing = true
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 172.08, 566.841 )
 frames = SubResource( 1 )
-frame = 13
+frame = 5
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "New Anim"
@@ -146,7 +147,7 @@ playback_speed = 2.0
 [node name="AnimatedSprite2" type="AnimatedSprite" parent="."]
 position = Vector2( 565.565, 540.116 )
 frames = SubResource( 1 )
-frame = 14
+frame = 3
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite2"]
 autoplay = "New Anim"
