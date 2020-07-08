@@ -1,8 +1,11 @@
 [gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://pallet.png" type="Texture" id=1]
-[ext_resource path="res://3.png" type="Texture" id=2]
-[ext_resource path="res://Golden_runes2.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Pallets/pallet.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Textures/3.png" type="Texture" id=2]
+[ext_resource path="res://Assets/Golden_runes2.png" type="Texture" id=3]
+
+
+
 
 [sub_resource type="Shader" id=3]
 code = "shader_type canvas_item;	
