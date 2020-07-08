@@ -1,0 +1,162 @@
+[gd_scene load_steps=28 format=2]
+
+[ext_resource path="res://Assets/Loop/Orb/0025.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Loop/Orb/0013.png" type="Texture" id=2]
+[ext_resource path="res://Assets/Loop/Orb/0011.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Loop/Orb/0007.png" type="Texture" id=4]
+[ext_resource path="res://Assets/Loop/Orb/0009.png" type="Texture" id=5]
+[ext_resource path="res://Assets/Loop/Orb/0021.png" type="Texture" id=6]
+[ext_resource path="res://Assets/Pallets/31-1x.png" type="Texture" id=7]
+[ext_resource path="res://Assets/Loop/Orb/0029.png" type="Texture" id=8]
+[ext_resource path="res://Assets/Loop/Orb/0023.png" type="Texture" id=9]
+[ext_resource path="res://Assets/Loop/Orb/0027.png" type="Texture" id=10]
+[ext_resource path="res://Assets/Loop/Orb/0015.png" type="Texture" id=11]
+[ext_resource path="res://Assets/Loop/Orb/0019.png" type="Texture" id=12]
+[ext_resource path="res://Assets/Loop/Orb/0001.png" type="Texture" id=13]
+[ext_resource path="res://Assets/Loop/Orb/0005.png" type="Texture" id=14]
+[ext_resource path="res://Assets/Loop/Orb/0017.png" type="Texture" id=15]
+[ext_resource path="res://Assets/Loop/Orb/0003.png" type="Texture" id=16]
+[ext_resource path="res://Assets/Loop/hole/0022.png" type="Texture" id=17]
+[ext_resource path="res://Assets/Loop/hole/0019.png" type="Texture" id=18]
+[ext_resource path="res://Assets/Loop/hole/0025.png" type="Texture" id=19]
+[ext_resource path="res://Assets/Loop/hole/0028.png" type="Texture" id=20]
+[ext_resource path="res://Assets/Loop/hole/0016.png" type="Texture" id=21]
+
+[sub_resource type="SpriteFrames" id=6]
+animations = [ {
+"frames": [ ExtResource( 21 ), ExtResource( 18 ), ExtResource( 17 ), ExtResource( 19 ), ExtResource( 20 ) ],
+"loop": true,
+"name": "default",
+"speed": 2.0
+} ]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 13 ), ExtResource( 16 ), ExtResource( 14 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 3 ), ExtResource( 2 ), ExtResource( 11 ), ExtResource( 15 ), ExtResource( 12 ), ExtResource( 6 ), ExtResource( 9 ), ExtResource( 1 ), ExtResource( 10 ), ExtResource( 8 ) ],
+"loop": false,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="Animation" id=2]
+resource_name = "New Anim"
+length = 6.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 2.2, 3.1, 5.8 ),
+"transitions": PoolRealArray( 1, -0.5, -2, 2 ),
+"update": 0,
+"values": [ 0, 14, 14, 1 ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "New Anim"
+length = 6.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 2.2, 3.1, 5.8 ),
+"transitions": PoolRealArray( 1, -0.5, -2, 2 ),
+"update": 0,
+"values": [ 0, 14, 14, 1 ]
+}
+
+[sub_resource type="Shader" id=3]
+code = "shader_type canvas_item;	
+render_mode blend_mix;	
+
+uniform sampler2D pallet;
+	
+uniform bool on = true;
+uniform float strenght = 10.0;
+
+
+
+void fragment() {	
+	float dx = SCREEN_PIXEL_SIZE.x *strenght;
+	float dy = SCREEN_PIXEL_SIZE.y *strenght;
+	vec2 new_UV = vec2(dx* floor(SCREEN_UV.x/dx),dy* floor(SCREEN_UV.y/dy) );
+	new_UV *= vec2((strenght+720.0)/720.0,(strenght+720.0)/720.0);
+	COLOR = textureLod(SCREEN_TEXTURE,new_UV,1.0);
+
+	if(on)	
+	{
+		
+		vec4 bestColor = vec4(0, 0, 0, 1.0);
+		vec3 bestDiff = vec3(100, 100, 100);
+
+		//if(length(COLOR.rgb)<0.39 ){COLOR.rgb = mix(vec3(0.5), COLOR.rgb, 1.9);}
+		//if(COLOR.r>0.5 || COLOR.b >0.5 || COLOR.g >0.5){COLOR.rgb = mix(vec3(dot(COLOR.rgb, vec3(0.9)) * 0.33333), COLOR.rgb, 1.3);}
+
+
+		for (float i = 0.0; i < 31.0; ++i) {
+			for (float j = 0.0; j<1.0; j++){
+				
+
+				vec4 palCol = texture(pallet, vec2(i/31.0,j));
+	 			vec3 diff = ( COLOR.rgb-palCol.rgb )/2.0 ;
+				diff = abs(diff);
+				if (length(diff) < length(bestDiff)) {
+	   			     bestDiff = diff;
+	    		    bestColor = palCol;
+				}
+			}
+			}
+		COLOR = bestColor;
+
+	}
+	}	"
+custom_defines = ""
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = SubResource( 3 )
+shader_param/on = true
+shader_param/strenght = 2.0
+shader_param/pallet = ExtResource( 7 )
+
+[node name="SimpleAnimation" type="Node2D"]
+
+[node name="AnimatedSprite3" type="AnimatedSprite" parent="."]
+position = Vector2( 382.476, 178.881 )
+frames = SubResource( 6 )
+frame = 3
+playing = true
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+position = Vector2( 172.08, 566.841 )
+frames = SubResource( 1 )
+frame = 13
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
+autoplay = "New Anim"
+playback_speed = 2.0
+"anims/New Anim" = SubResource( 2 )
+
+[node name="AnimatedSprite2" type="AnimatedSprite" parent="."]
+position = Vector2( 565.565, 540.116 )
+frames = SubResource( 1 )
+frame = 14
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite2"]
+autoplay = "New Anim"
+playback_speed = 2.0
+"anims/New Anim" = SubResource( 5 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource( 4 )
+margin_right = 360.0
+margin_bottom = 720.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
